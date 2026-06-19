@@ -1,0 +1,27 @@
+{
+    "user_id": "user_005",
+    "claim_status": "contradicted",
+    "confidence": {
+        "overall_confidence": 0.2,
+        "image_confidence": 0.0,
+        "claim_confidence": 0.95,
+        "evidence_confidence": 0.0,
+        "risk_confidence": 0.1
+    },
+    "health_score": 0,
+    "fraud_intelligence": {
+        "fraud_risk_score": 90,
+        "repeated_claims_flag": true,
+        "high_rejection_history_flag": true,
+        "rapid_submissions_flag": true,
+        "missing_evidence_patterns": false,
+        "fraud_rationale": "High fraud risk detected based on historical patterns."
+    },
+    "copilot_summary": {
+        "recommended_action": "Reject - Fraud Risk",
+        "reason": "Claim contradicted with a high fraud risk score.",
+        "evidence_summary": "No visual evidence was provided or processed, resulting in 0% evidence coverage and unknown vision findings.",
+        "potential_concerns": "High fraud risk (90/100) and complete lack of evidence coverage."
+    },
+    "audit_timestamp": "2026-06-19T14:23:12.827132Z"
+}

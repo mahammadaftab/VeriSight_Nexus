@@ -1,0 +1,27 @@
+{
+    "user_id": "user_026",
+    "claim_status": "not_enough_information",
+    "confidence": {
+        "overall_confidence": 0.29,
+        "image_confidence": 0.0,
+        "claim_confidence": 0.95,
+        "evidence_confidence": 0.0,
+        "risk_confidence": 1.0
+    },
+    "health_score": 0,
+    "fraud_intelligence": {
+        "fraud_risk_score": 0,
+        "repeated_claims_flag": false,
+        "high_rejection_history_flag": false,
+        "rapid_submissions_flag": false,
+        "missing_evidence_patterns": false,
+        "fraud_rationale": "User exhibits normal behavior."
+    },
+    "copilot_summary": {
+        "recommended_action": "Manual Review Required",
+        "reason": "Insufficient information and complete lack of evidence to make a decision.",
+        "evidence_summary": "No visual evidence was provided or processed, resulting in 0% coverage and unknown vision findings.",
+        "potential_concerns": "Complete absence of evidence. Claim Health Score is 0/100. Fraud risk is not detected."
+    },
+    "audit_timestamp": "2026-06-19T18:14:30.283936Z"
+}
