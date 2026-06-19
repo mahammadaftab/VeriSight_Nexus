@@ -17,6 +17,56 @@ Instead of relying on a single monolithic model to "guess" an outcome, VeriSight
 
 ## 🧠 System Architecture: The Multi-Agent Pipeline
 
+```mermaid
+graph TD
+    %% Styling
+    classDef agent fill:#0a0515,stroke:#3b82f6,stroke-width:2px,color:#fff
+    classDef data fill:#1e1b4b,stroke:#a855f7,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+    classDef output fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
+    
+    %% Inputs
+    IN_TXT[User Conversation]:::data
+    IN_IMG[Claim Images]:::data
+    IN_HIST[User Risk History]:::data
+    IN_EVID[Evidence Requirements]:::data
+
+    %% Agents
+    A_EXT[Claim Extraction Agent]:::agent
+    A_VIS[Vision Inspection Agent]:::agent
+    A_OBJ[Object Part Agent]:::agent
+    A_RSK[Risk Assessment Agent]:::agent
+    A_VAL[Evidence Validation Agent]:::agent
+    A_DEC[Decision Engine]:::agent
+    A_EXP[Explanation Agent]:::agent
+    
+    %% Output Services
+    SRV_OUT[Output Generator Service]:::output
+    DB_CSV[(output.csv / MongoDB)]:::output
+
+    %% Flow
+    IN_TXT --> A_EXT
+    IN_IMG --> A_VIS
+    
+    A_EXT -- "Extracted Issue/Object" --> A_VIS
+    A_EXT -- "Extracted Issue/Object" --> A_VAL
+    A_EXT -- "Extracted Issue/Object" --> A_OBJ
+    
+    A_VIS -- "Detected Damage/Part" --> A_OBJ
+    IN_EVID --> A_VAL
+    IN_HIST --> A_RSK
+
+    A_OBJ -- "Verified Alignment" --> A_DEC
+    A_VIS -- "Severity & Quality Flags" --> A_DEC
+    A_VAL -- "Evidence Met Boolean" --> A_DEC
+    A_RSK -- "Historical Fraud Score" --> A_DEC
+
+    A_DEC -- "Claim Status & Confidence" --> A_EXP
+    A_VIS -- "Supporting Image IDs" --> A_EXP
+    
+    A_EXP -- "Final Grounded Justification" --> SRV_OUT
+    SRV_OUT -- "Validated Strict Schema" --> DB_CSV
+```
+
 VeriSight Nexus processes every claim through a strict 7-stage pipeline:
 
 1. **Claim Extraction Agent**: Parses the user's conversational chat transcript to definitively identify *what* the user is claiming is damaged (e.g., "cracked screen", "dented bumper").
