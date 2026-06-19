@@ -89,8 +89,8 @@ export default function Navbar() {
                 <a
                   key={link.label}
                   href={link.href}
-                  target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noopener noreferrer" : undefined}
+                  target={'external' in link && link.external ? "_blank" : undefined}
+                  rel={'external' in link && link.external ? "noopener noreferrer" : undefined}
                   className={`relative px-3.5 py-2 text-[13px] font-medium rounded-lg transition-all duration-300 ${
                     activeSection === link.href.replace("#", "")
                       ? "text-white"

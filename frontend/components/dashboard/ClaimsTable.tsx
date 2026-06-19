@@ -19,7 +19,7 @@ interface Claim {
 
 interface Props {
   claims: Claim[];
-  selectedId: str | null;
+  selectedId: string | null;
   onSelect: (id: string) => void;
 }
 
