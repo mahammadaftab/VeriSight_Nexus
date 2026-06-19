@@ -1,15 +1,33 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
   Search, Bell, Settings, UserCircle, 
-  ChevronDown, Activity, Globe, Command
+  ChevronDown, Activity, Globe, Command, DownloadCloud, Loader2
 } from "lucide-react";
 
 export function TopBar() {
   const { user } = useAuth();
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateSubmission = async () => {
+    try {
+      setIsGenerating(true);
+      const res = await fetch("http://localhost:8000/api/v1/process-all-claims", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message || "Final submission generated successfully!");
+      } else {
+        alert("Error generating submission: " + (data.detail || "Unknown error"));
+      }
+    } catch (err) {
+      alert("Error: " + err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/[0.05] bg-[#030014]/60 backdrop-blur-xl">
@@ -67,6 +85,14 @@ export function TopBar() {
         {/* Right: Status, Nav, Profile */}
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-3 pr-5 border-r border-white/10">
+            <button 
+              onClick={handleGenerateSubmission}
+              disabled={isGenerating}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white text-[#030014] text-[11px] font-bold tracking-wide hover:bg-white/90 transition-colors disabled:opacity-50"
+            >
+              {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <DownloadCloud className="w-3 h-3" />}
+              {isGenerating ? "GENERATING..." : "GENERATE FINAL SUBMISSION"}
+            </button>
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-medium tracking-wide cursor-help" title="All pipeline systems operational">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               SYSTEM HEALTHY

@@ -17,6 +17,7 @@ const AGENTS = [
   { id: "Risk Assessment Agent", icon: ShieldAlert, color: "text-rose-400", bg: "bg-rose-500/20", border: "border-rose-500/50" },
   { id: "Decision Agent", icon: Cpu, color: "text-amber-400", bg: "bg-amber-500/20", border: "border-amber-500/50" },
   { id: "Explanation Agent", icon: HelpCircle, color: "text-emerald-400", bg: "bg-emerald-500/20", border: "border-emerald-500/50" },
+  { id: "Output Generator Service", icon: Network, color: "text-cyan-400", bg: "bg-cyan-500/20", border: "border-cyan-500/50" },
 ];
 
 export function LiveAgentPipeline({ activeAgent, agentStatus }: PipelineProps) {
@@ -58,7 +59,10 @@ export function LiveAgentPipeline({ activeAgent, agentStatus }: PipelineProps) {
                   <agent.icon className={`w-4 h-4 ${isActive ? agent.color : isDone ? "text-emerald-400" : "text-white/20"}`} />
                 </motion.div>
                 <div className="text-center w-full">
-                  <p className="text-[10px] font-medium text-white/80 leading-tight w-full truncate px-1">{agent.id.replace(" Agent", "")}</p>
+                  <p className="text-[10px] font-medium text-white/80 leading-tight w-full truncate px-1">{agent.id.replace(" Agent", "").replace(" Service", "")}</p>
+                  {agent.id === "Output Generator Service" && agentStatus[agent.id] && agentStatus[agent.id] !== "processing" && (
+                    <p className="text-[8px] text-cyan-400 mt-0.5 animate-pulse">{agentStatus[agent.id].toUpperCase()}</p>
+                  )}
                 </div>
                 
                 {/* Horizontal Progress Bar beneath icon */}
