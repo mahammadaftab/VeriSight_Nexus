@@ -62,7 +62,7 @@ uvicorn api:app --reload --host 0.0.0.0 --port 8000
 
 **Frontend Dashboard (Next.js):**
 ```bash
-cd landing
+cd frontend
 npm install
 npm run dev
 ```

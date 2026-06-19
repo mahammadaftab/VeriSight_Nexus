@@ -24,11 +24,11 @@ export function ImageGallery({ imagePathsRaw, claimObject, userClaim }: Props) {
     );
   }
 
-  // Generate public paths (assuming images are placed in landing/public/dataset/images)
+  // Generate public paths (assuming images are placed in frontend/public/dataset/images)
   // Or we can just use the absolute path if served via backend.
-  // For the frontend, since landing is running, we assume images are copied to public/dataset/
+  // For the frontend, since frontend is running, we assume images are copied to public/dataset/
   // But wait, they are in ../dataset/images. We should create an API route or serve them.
-  // Let's assume we copy the dataset/images folder to landing/public/images/ for Next.js to serve,
+  // Let's assume we copy the dataset/images folder to frontend/public/images/ for Next.js to serve,
   // or use the backend to proxy images. Let's just point to /images/... which we will set up.
   
   return (
