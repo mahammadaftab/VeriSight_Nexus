@@ -37,7 +37,7 @@ app = FastAPI(title="VeriSight Nexus API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://verisight-nexus-front.onrender.com"],
+    allow_origins=["http://localhost:3000", "https://veri-sight-nexus-front.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
