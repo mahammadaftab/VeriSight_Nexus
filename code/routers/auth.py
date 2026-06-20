@@ -100,14 +100,16 @@ async def signin(user: UserSignin, response: Response):
         value=access_token,
         httponly=True,
         max_age=1800, # 30 mins
-        samesite="lax"
+        samesite="none",
+        secure=True
     )
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
         max_age=604800, # 7 days
-        samesite="lax"
+        samesite="none",
+        secure=True
     )
     
     return {
