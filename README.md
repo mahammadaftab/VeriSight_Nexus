@@ -5,6 +5,22 @@
 
 ---
 
+## 🌐 Live Deployment & Preview
+
+Experience VeriSight Nexus live in production:
+- **Frontend Dashboard (Vercel):** [https://veri-sight-nexus-front.vercel.app/](https://veri-sight-nexus-front.vercel.app/)
+- **Backend API (Render):** [https://verisight-nexus-back.onrender.com](https://verisight-nexus-back.onrender.com)
+
+### Application Previews
+*Click images to expand.*
+
+![Nexus Core Hero](assets/screenshot_4.png)
+![Login Screen](assets/screenshot_2.png)
+![Execution Pipeline](assets/screenshot_1.png)
+![Dashboard Queue](assets/screenshot_3.png)
+
+---
+
 ## 📖 The Story
 
 Fraudulent damage claims, manipulated images, and staged damage slip past manual reviewers every day. Human review is slow, subjective, and struggles to cross-reference visual evidence against historical risk at scale.
