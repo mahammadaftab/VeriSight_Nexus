@@ -36,7 +36,7 @@ export function ImageGallery({ imagePathsRaw, claimObject, userClaim }: Props) {
       {/* Main Viewer */}
       <div className="relative flex-1 glass rounded-xl border border-white/10 overflow-hidden group bg-black/40 flex items-center justify-center">
         <img 
-          src={`http://localhost:8000/${images[selectedIdx]}`} 
+          src={`https://verisight-nexus-back.onrender.com/${images[selectedIdx]}`} 
           alt={`${claimObject} evidence`}
           className="max-w-full max-h-full object-contain"
         />
@@ -62,7 +62,7 @@ export function ImageGallery({ imagePathsRaw, claimObject, userClaim }: Props) {
                 selectedIdx === idx ? 'border-blue-500 opacity-100' : 'border-transparent opacity-50 hover:opacity-100'
               }`}
             >
-              <img src={`http://localhost:8000/${img}`} className="w-full h-full object-cover" alt="thumbnail" />
+              <img src={`https://verisight-nexus-back.onrender.com/${img}`} className="w-full h-full object-cover" alt="thumbnail" />
             </button>
           ))}
         </div>

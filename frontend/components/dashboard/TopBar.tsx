@@ -15,7 +15,7 @@ export function TopBar() {
   const handleGenerateSubmission = async () => {
     try {
       setIsGenerating(true);
-      const res = await fetch("http://localhost:8000/api/v1/process-all-claims", { method: "POST" });
+      const res = await fetch("https://verisight-nexus-back.onrender.com/api/v1/process-all-claims", { method: "POST" });
       const data = await res.json();
       if (res.ok) {
         alert(data.message || "Final submission generated successfully!");

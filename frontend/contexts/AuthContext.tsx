@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check if user is logged in
     async function fetchUser() {
       try {
-        const res = await fetch("http://localhost:8000/api/auth/me", {
+        const res = await fetch("https://verisight-nexus-back.onrender.com/api/auth/me", {
           credentials: "include", // Send HTTPOnly cookies
         });
         if (res.ok) {
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:8000/api/auth/logout", {
+      await fetch("https://verisight-nexus-back.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
       });

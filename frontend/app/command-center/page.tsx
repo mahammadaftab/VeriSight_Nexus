@@ -15,8 +15,8 @@ export default function CommandCenterPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:8000/metrics', { credentials: 'include' }).then(res => res.json()),
-      fetch('http://localhost:8000/api/observability', { credentials: 'include' }).then(res => res.json())
+      fetch('https://verisight-nexus-back.onrender.com/metrics', { credentials: 'include' }).then(res => res.json()),
+      fetch('https://verisight-nexus-back.onrender.com/api/observability', { credentials: 'include' }).then(res => res.json())
     ]).then(([metricsData, obsData]) => {
       setMetrics(metricsData);
       setObs(obsData);

@@ -39,10 +39,10 @@ export default function DashboardPage() {
   useEffect(() => {
     // Fetch metrics and claims
     Promise.all([
-      fetch('http://localhost:8000/claims', { credentials: 'include' }).then(res => res.json()),
-      fetch('http://localhost:8000/metrics', { credentials: 'include' }).then(res => res.json()),
-      fetch('http://localhost:8000/api/observability', { credentials: 'include' }).then(res => res.json()),
-      fetch('http://localhost:8000/api/evaluation', { credentials: 'include' }).then(res => res.json())
+      fetch('https://verisight-nexus-back.onrender.com/claims', { credentials: 'include' }).then(res => res.json()),
+      fetch('https://verisight-nexus-back.onrender.com/metrics', { credentials: 'include' }).then(res => res.json()),
+      fetch('https://verisight-nexus-back.onrender.com/api/observability', { credentials: 'include' }).then(res => res.json()),
+      fetch('https://verisight-nexus-back.onrender.com/api/evaluation', { credentials: 'include' }).then(res => res.json())
     ]).then(([claimsData, metricsData, obsData, evalRes]) => {
       if(claimsData.claims) {
         setClaims(claimsData.claims);
@@ -72,7 +72,7 @@ export default function DashboardPage() {
     }
     
     if (selectedId) {
-      fetch(`http://localhost:8000/claim/${selectedId}`, { credentials: 'include' })
+      fetch(`https://verisight-nexus-back.onrender.com/claim/${selectedId}`, { credentials: 'include' })
         .then(res => res.json())
         .then(data => setClaimData(data))
         .catch(console.error);
@@ -90,7 +90,7 @@ export default function DashboardPage() {
     setActiveAgent(null);
     setAgentStatus({});
 
-    const ws = new WebSocket(`ws://localhost:8000/ws/analyze/${selectedId}`);
+    const ws = new WebSocket(`wss://verisight-nexus-back.onrender.com/ws/analyze/${selectedId}`);
     wsRef.current = ws;
 
     ws.onmessage = (event) => {
@@ -129,17 +129,17 @@ export default function DashboardPage() {
         });
         
         // Re-fetch evaluation data if we finished a claim to keep metrics fully live
-        fetch('http://localhost:8000/api/evaluation', { credentials: 'include' })
+        fetch('https://verisight-nexus-back.onrender.com/api/evaluation', { credentials: 'include' })
           .then(res => res.json())
           .then(setEvalData)
           .catch(console.error);
           
-        fetch('http://localhost:8000/metrics', { credentials: 'include' })
+        fetch('https://verisight-nexus-back.onrender.com/metrics', { credentials: 'include' })
           .then(res => res.json())
           .then(setMetrics)
           .catch(console.error);
 
-        fetch('http://localhost:8000/api/observability', { credentials: 'include' })
+        fetch('https://verisight-nexus-back.onrender.com/api/observability', { credentials: 'include' })
           .then(res => res.json())
           .then(setObs)
           .catch(console.error);

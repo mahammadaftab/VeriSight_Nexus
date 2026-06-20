@@ -93,9 +93,9 @@ export function SelectedClaimWorkspace({ claimData, finalResult, steps }: Worksp
           <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 grid grid-cols-2 gap-3">
             {images.map((path: string, i: number) => {
               // path is something like "images/sample/case_001/img_1.jpg"
-              // The API mounts "/images" to "dataset/images". So "http://localhost:8000/" + path perfectly points to the image.
+              // The API mounts "/images" to "dataset/images". So "https://verisight-nexus-back.onrender.com/" + path perfectly points to the image.
               const cleanPath = path.trim();
-              const imgUrl = cleanPath.startsWith('http') ? cleanPath : `http://localhost:8000/${cleanPath}`;
+              const imgUrl = cleanPath.startsWith('http') ? cleanPath : `https://verisight-nexus-back.onrender.com/${cleanPath}`;
               return (
                 <div 
                   key={i} 
