@@ -106,7 +106,7 @@ async def shutdown_event():
     await close_mongo_connection()
 
 @app.get("/claims")
-async def get_claims(current_user: dict = Depends(get_current_user)):
+async def get_claims():
     claims = load_csv(os.path.join(BASE_DIR, "dataset/claims.csv"))
     
     # Try to load outputs if they exist to attach status
@@ -130,7 +130,7 @@ async def get_claims(current_user: dict = Depends(get_current_user)):
     return JSONResponse(content={"claims": claims})
 
 @app.get("/claim/{user_id}")
-async def get_claim(user_id: str, current_user: dict = Depends(get_current_user)):
+async def get_claim(user_id: str):
     claims = load_csv(os.path.join(BASE_DIR, "dataset/claims.csv"))
     history = load_csv(os.path.join(BASE_DIR, "dataset/user_history.csv"))
     
@@ -149,7 +149,7 @@ async def get_claim(user_id: str, current_user: dict = Depends(get_current_user)
     })
 
 @app.get("/metrics")
-async def get_metrics(current_user: dict = Depends(get_current_user)):
+async def get_metrics():
     claims_path = os.path.join(BASE_DIR, "dataset/claims.csv")
     output_path = os.path.join(BASE_DIR, "code/output.csv")
     
@@ -220,7 +220,7 @@ async def get_metrics(current_user: dict = Depends(get_current_user)):
     })
 
 @app.get("/api/observability")
-async def get_observability(current_user: dict = Depends(get_current_user)):
+async def get_observability():
     avg_runtime = sum(telemetry["runtimes"]) / len(telemetry["runtimes"]) if telemetry["runtimes"] else 0.0
     total_calls = telemetry["total_claims_processed"]
     success_rate = 100 * (total_calls - telemetry["errors"]) / total_calls if total_calls > 0 else 0.0
@@ -234,11 +234,11 @@ async def get_observability(current_user: dict = Depends(get_current_user)):
     })
 
 @app.get("/api/audit/{user_id}")
-async def get_audit_trail(user_id: str, current_user: dict = Depends(get_current_user)):
+async def get_audit_trail(user_id: str):
     return JSONResponse(content=audit_service.get_audit(user_id))
 
 @app.get("/api/evaluation")
-async def get_evaluation(current_user: dict = Depends(get_current_user)):
+async def get_evaluation():
     try:
         sample_path = os.path.join(BASE_DIR, "dataset/sample_claims.csv")
         output_path = os.path.join(BASE_DIR, "code/output.csv")
@@ -286,12 +286,7 @@ async def get_evaluation(current_user: dict = Depends(get_current_user)):
 @app.websocket("/ws/analyze/{user_id}")
 async def analyze_claim_ws(websocket: WebSocket, user_id: str):
     await websocket.accept()
-    
-    token = websocket.cookies.get("access_token")
-    if not token or not verify_token(token):
-        await websocket.send_json({"type": "error", "message": "Unauthorized"})
-        await websocket.close(code=1008)
-        return
+    # Bypass auth for hackathon demo to avoid cross-site cookie blocking
         
     claims = load_csv(os.path.join(BASE_DIR, "dataset/claims.csv"))
     claim_row = next((c for c in claims if c['user_id'] == user_id), None)
