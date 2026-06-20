@@ -1,12 +1,13 @@
 import os
-from google import genai
-from google.genai import types
+import json
+import base64
+from io import BytesIO
 from pydantic import BaseModel
 from typing import Type, TypeVar, Optional, List
 from PIL import Image
 from dotenv import load_dotenv
-import time
-from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+from tenacity import retry, wait_exponential, stop_after_attempt
+from openai import OpenAI
 
 load_dotenv()
 
@@ -14,11 +15,13 @@ T = TypeVar('T', bound=BaseModel)
 
 class LLMService:
     def __init__(self):
-        # We assume OPENAI_API_KEY or GEMINI_API_KEY or GOOGLE_API_KEY is available.
-        # Since I proposed Gemini, we will use the genai SDK.
-        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-        self.client = genai.Client(api_key=api_key)
-        self.default_model = "gemini-2.5-flash"
+        api_key = os.environ.get("OPENROUTER_API_KEY")
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+        )
+        # Using OpenRouter's model ID format
+        self.default_model = "google/gemini-2.5-flash"
     
     @retry(
         wait=wait_exponential(multiplier=2, min=4, max=60), 
@@ -27,30 +30,42 @@ class LLMService:
     )
     def generate_structured(self, prompt: str, schema: Type[T], images: Optional[List[Image.Image]] = None) -> T:
         """
-        Generates a structured response conforming to the provided Pydantic schema with exponential backoff for 429 errors.
+        Generates a structured response conforming to the provided Pydantic schema using OpenRouter.
         """
-        contents = []
+        # Inject schema requirement into the prompt for maximum compatibility across OpenRouter models
+        schema_json = json.dumps(schema.model_json_schema(), indent=2)
+        full_prompt = f"{prompt}\n\nYou MUST return ONLY valid JSON. Your JSON response must perfectly match this JSON Schema:\n{schema_json}"
+        
+        content_array = [{"type": "text", "text": full_prompt}]
+        
         if images:
             for img in images:
-                contents.append(img)
-        
-        contents.append(prompt)
+                buffered = BytesIO()
+                # Ensure compatibility for jpeg
+                if img.mode != "RGB":
+                    img = img.convert("RGB")
+                img.save(buffered, format="JPEG", quality=85)
+                base64_image = base64.b64encode(buffered.getvalue()).decode('utf-8')
+                content_array.append({
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{base64_image}"
+                    }
+                })
         
         try:
-            response = self.client.models.generate_content(
+            response = self.client.chat.completions.create(
                 model=self.default_model,
-                contents=contents,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_schema=schema,
-                    temperature=0.0 # Deterministic
-                )
+                messages=[
+                    {"role": "user", "content": content_array}
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.0
             )
             
-            # The SDK will automatically parse to the schema if provided, but we can also parse the raw JSON.
-            # In google-genai, if response_schema is provided, response.text contains the JSON.
-            return schema.model_validate_json(response.text)
+            result_text = response.choices[0].message.content
+            return schema.model_validate_json(result_text)
             
         except Exception as e:
-            print(f"Error calling LLM: {e}")
+            print(f"Error calling LLM via OpenRouter: {e}")
             raise e
